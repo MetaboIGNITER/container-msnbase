@@ -23,6 +23,7 @@ adductRules<-"primary"
 filetype<-"txt"
 outputMerge=F
 outputname=""
+removeDup<-F
 for(arg in args)
 {
   argCase<-strsplit(x = arg,split = "=")[[1]][1]
@@ -112,6 +113,11 @@ for(arg in args)
   {
     outputname=as.character(value)
   }
+  if(argCase=="removeDup")
+  {
+    removeDup=as.logical(value)
+  }
+
 }
 
 if(is.na(inputMS2) | is.na(inputCamera) | is.na(output)) stop("Both input (CAMERA and MS2) and output need to be specified!\n")
@@ -168,7 +174,20 @@ readFileToDataframe<-function(x)
 
 }
 
+if(removeDup)
+{
 
+Files<-list.files(output,pattern = "txt")
+FilesTMP<-sapply(strsplit(split = "_",fixed = T,x = basename(Files)),function(x){paste(x[-1],collapse = "_")})
+
+
+FileDub<-Files[duplicated(FilesTMP)]
+
+for(x in FileDub)
+{
+  file.remove(x)
+}
+}
 if(outputMerge)
 {
 library(data.table)

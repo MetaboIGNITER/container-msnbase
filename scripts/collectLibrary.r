@@ -12,7 +12,6 @@ appendTo<-NA
 appendToName<-"realNames"
 cleanFileName=T
 filetype="txt"
-outTable=F
 for(arg in args)
 {
   argCase<-strsplit(x = arg,split = "=")[[1]][1]
@@ -34,10 +33,6 @@ for(arg in args)
   {
     output=as.character(value)
   }
-  if(argCase=="outTable")
-  {
-    outTable=as.logical(value)
-  }
   
 }
 
@@ -52,13 +47,13 @@ if(cleanFileName)
 ##### if it is a zip file
 if(filetype=="zip")
 {
-
-dir.create("metfragTMPRes", showWarnings = FALSE)
-unzip(inputs,exdir = "metfragTMPRes", junkpaths = T)
-files<-list.files("metfragTMPRes",full.names = TRUE)
-inputs<-files
-realNamesTMP<-files
-
+  
+  dir.create("metfragTMPRes", showWarnings = FALSE)
+  unzip(inputs,exdir = "metfragTMPRes", junkpaths = T)
+  files<-list.files("metfragTMPRes",full.names = TRUE)
+  inputs<-files
+  realNamesTMP<-files
+  
 }
 
 inputs<-inputs[inputs!=""]
@@ -76,22 +71,28 @@ for(i in 1:length(inputs))
     tmpFile<-read.csv(inputs[i])
     # check if the file has any IDs
     if(nrow(tmpFile)>0)
-      {
-    # Extract mz and rt from the real file names
-    rt<-as.numeric(strsplit(x = realNamesTMP[i],split = "_",fixed = T)[[1]][2])
-    mz<-as.numeric(strsplit(x = realNamesTMP[i],split = "_",fixed = T)[[1]][3])
-
-    allMS2IDs<-rbind(allMS2IDs,data.frame(parentMZ=mz,parentRT=rt,tmpFile))
-      }
+    {
+      # Extract mz and rt from the real file names
+    #  rt<-as.numeric(strsplit(x = realNamesTMP[i],split = "_",fixed = T)[[1]][2])
+     # mz<-as.numeric(strsplit(x = realNamesTMP[i],split = "_",fixed = T)[[1]][3])
+      
+      allMS2IDs<-rbind(allMS2IDs,tmpFile)
+    }
   }
-
+  
 }
+if(!"featureGroup"%in%colnames(allMS2IDs))stop("featureGroup is not in library file!")
+if(!"MS2fileName"%in%colnames(allMS2IDs))stop("MS2fileName is not in library file!")
 
-if(outTable)
+
+MSNames<-unique(allMS2IDs[,"MS2fileName"])
+maxN<-0
+for(i in MSNames)
 {
-write.table(x,output,quote=F,sep="\t")
-}else{
-write.csv(x = allMS2IDs,file = output)
+allMS2IDs[allMS2IDs[,"MS2fileName"]==i,"featureGroup"]<-allMS2IDs[allMS2IDs[,"MS2fileName"]==i,"featureGroup"]+maxN
+maxN<-max(allMS2IDs[allMS2IDs[,"MS2fileName"]==i,"featureGroup"])
 }
+write.csv(x = allMS2IDs,file = output)
+
 
 
