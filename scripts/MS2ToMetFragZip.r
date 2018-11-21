@@ -21,6 +21,7 @@ database<-"KEGG"
 mode<-"pos"
 adductRules<-"primary"
 filetype<-NA
+removeDup<-F
 for(arg in args)
 {
   argCase<-strsplit(x = arg,split = "=")[[1]][1]
@@ -102,6 +103,10 @@ for(arg in args)
   {
     filetype=as.character(value)
   }
+    if(argCase=="removeDup")
+  {
+    removeDup=as.logical(value)
+  }
 
 }
 
@@ -136,7 +141,20 @@ toMetfragCommand(mappedMS2 = MappedMS2s$mapped,unmappedMS2 = MappedMS2s$unmapped
 
 print(length(list.files("metfragTMP",full.names = TRUE)))
 
+if(removeDup)
+{
 
+Files<-list.files(pattern = "txt",full.names=T)
+FilesTMP<-sapply(strsplit(split = "_",fixed = T,x = basename(Files)),function(x){paste(x[-1],collapse = "_")})
+
+
+FileDub<-Files[duplicated(FilesTMP)]
+
+for(x in FileDub)
+{
+  file.remove(x)
+}
+}
 zip::zip(zipfile="mappedtometfrag.zip",files=list.files(pattern="txt"))
 
 res2<-file.copy(from ="mappedtometfrag.zip" ,to = paste(output,"/",mappedtometfrag.zip,sep=""),overwrite = T)

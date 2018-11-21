@@ -89,7 +89,7 @@ for(i in 1:length(inputs))
 
 if(outTable)
 {
-write.table(x,output,quote=F,sep="\t")
+write.table(x=allMS2IDs,file=output,quote=F,sep="\t")
 }else{
 write.csv(x = allMS2IDs,file = output)
 }

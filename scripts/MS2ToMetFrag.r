@@ -177,7 +177,7 @@ readFileToDataframe<-function(x)
 if(removeDup)
 {
 
-Files<-list.files(output,pattern = "txt")
+Files<-list.files(output,pattern = "txt",full.names=T)
 FilesTMP<-sapply(strsplit(split = "_",fixed = T,x = basename(Files)),function(x){paste(x[-1],collapse = "_")})
 
 
