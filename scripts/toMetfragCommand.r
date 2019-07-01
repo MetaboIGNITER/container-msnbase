@@ -85,8 +85,21 @@ toMetfragCommand<-function(mappedMS2=NA,
         tmpMASS<-as.numeric(str_extract(peakList[ grepl(isotopID,peakList[,"isotopes"],fixed=T),][monoIsotopic,"adduct"], " .*"))
         if(adduct!="" & !is.na(adduct)[1])
         {
-          tmpMASS<-as.numeric(str_extract(peakList[ grepl(isotopID,peakList[,"isotopes"],fixed=T),][monoIsotopic,"adduct"], " .*"))
-          neutralMASS<-tmpMASS			 
+      if(str_count(peakList[ grepl(isotopID,peakList[,"isotopes"],fixed=T),][monoIsotopic,"adduct"], "]")==1)
+        {
+          adduct<-gsub(" ","",str_extract(peakList[ grepl(isotopID,peakList[,"isotopes"],fixed=T),][monoIsotopic,"adduct"], "\\[.*\\]*. "))
+          neutralMASS<-as.numeric(str_extract(peakList[ grepl(isotopID,peakList[,"isotopes"],fixed=T),][monoIsotopic,"adduct"], " .*"))
+          searchChargeFlag<-F
+        }else 
+        {
+          adduct<-""
+          neutralMASS<-peakList[as.numeric(x),"mz"]
+          adduct<-unique(sapply(strsplit(str_extract_all(peakList[ grepl(isotopID,peakList[,"isotopes"],fixed=T),][monoIsotopic,"adduct"], "\\[.*?\\]")[[1]]," "),
+                                function(x){x[[1]]}))
+          searchChargeFlag<-T
+          seachAdducts<-adduct
+        }
+		
         }else
         { 
           isoTMP<-gsub("\\[.*\\]","",peakList[as.numeric(x),"isotopes"])
