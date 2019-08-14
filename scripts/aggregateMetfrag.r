@@ -71,7 +71,8 @@ for(i in 1:length(inputs))
 {
   # check if the file is empty
   info = file.info(inputs[i])
-  if(info$size!=0 & !is.na(info$size))
+  fileLines<-readLines(inputs[i])
+  if(info$size!=0 & !is.na(info$size) & length(fileLines)>1)
   {
     tmpFile<-read.csv(inputs[i])
     # check if the file has any IDs
