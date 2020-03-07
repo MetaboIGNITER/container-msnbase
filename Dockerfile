@@ -18,6 +18,9 @@ RUN R -e 'install.packages(c("ggplot2","digest","lattice","XML","Rcpp","reshape2
 RUN R -e 'install.packages("BiocInstaller", repos="http://bioconductor.org/packages/3.5/bioc"); library("BiocInstaller"); biocLite("MSnbase")'
 # RUN R -e 'source("https://bioconductor.org/biocLite.R"); biocLite("MSnbase")'
 
+# install require packages
+
+RUN R -e 'source("https://bioconductor.org/biocLite.R"); biocLite(c("argparse","tools","BiocParallel"))'
 # De-install not needed packages
 RUN apt-get -y --purge --auto-remove remove make gcc gfortran g++
 
