@@ -21,6 +21,9 @@ RUN R -e 'install.packages("BiocInstaller", repos="http://bioconductor.org/packa
 # install require packages
 
 RUN R -e 'source("https://bioconductor.org/biocLite.R"); biocLite(c("argparse","tools","BiocParallel"))'
+
+# install python 
+RUN apt-get -y --no-install-recommends install python
 # De-install not needed packages
 RUN apt-get -y --purge --auto-remove remove make gcc gfortran g++
 

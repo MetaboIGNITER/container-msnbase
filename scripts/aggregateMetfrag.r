@@ -17,7 +17,7 @@ for(arg in args)
 {
   argCase<-strsplit(x = arg,split = "=")[[1]][1]
   value<-strsplit(x = arg,split = "=")[[1]][2]
-  
+
   if(argCase=="realNames")
   {
     realNames=as.character(value)
@@ -38,7 +38,7 @@ for(arg in args)
   {
     outTable=as.logical(value)
   }
-  
+
 }
 
 
@@ -90,9 +90,17 @@ for(i in 1:length(inputs))
 
 if(outTable)
 {
-write.table(x=allMS2IDs,file=output,quote=F,sep="\t")
+if(nrow(allMS2IDs)<1)
+{
+file.create(args$outputCSV)
 }else{
-write.csv(x = allMS2IDs,file = output)
+  write.table(x=allMS2IDs,file=output,quote=F,sep="\t")
 }
-
-
+}else{
+if(nrow(allMS2IDs)<1)
+{
+file.create(args$outputCSV)
+}else{
+  write.csv(x = allMS2IDs,file = output)
+}
+}
