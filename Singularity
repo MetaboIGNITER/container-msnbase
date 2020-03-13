@@ -36,8 +36,6 @@ apt-get -y --purge --auto-remove remove make gcc gfortran g++
 # Clean-up
 apt-get -y clean && apt-get -y autoremove && rm -rf /var/lib/{cache,log}/ /tmp/* /var/tmp/*
 
-# Add scripts folder to container
-# Add files for testing
 
 chmod +x /usr/local/bin/*.r
 chmod +x /usr/local/bin/runTest1.sh
