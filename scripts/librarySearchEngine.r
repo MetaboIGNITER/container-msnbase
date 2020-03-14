@@ -844,7 +844,7 @@ main<-function()
 
 
     baseTMP<-"tmp"
-   # dir.create(baseTMP)
+    dir.create(baseTMP)
     tmpDIR<-paste(baseTMP,"/","inputs",sep = "")
    dir.create(tmpDIR)
   # file.copy(list.files("wetransfer-a2e025/res/out/")[4000:5000],tmpDIR)
@@ -955,14 +955,15 @@ main<-function()
       }
       if(args$outTable)
       {
-      if(nrow(allMS2IDs)<1)
+
+      if(is.null(allMS2IDs) || nrow(allMS2IDs)<1)
       {
 file.create(args$outputCSV)
       }else{
         write.table(x=allMS2IDs,file=args$outputCSV,quote=F,sep="\t")
       }
       }else{
-      if(nrow(allMS2IDs)<1)
+      if(is.null(allMS2IDs) || nrow(allMS2IDs)<1)
       {
 file.create(args$outputCSV)
       }else{
